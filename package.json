@@ -1,8 +1,9 @@
 {
   "name": "chessy",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "ng": "ng",
+    "api": "npm run start --prefix server",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",

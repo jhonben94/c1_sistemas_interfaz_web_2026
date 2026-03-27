@@ -1,0 +1,70 @@
+{
+  "rootId": "root",
+  "nodes": {
+    "root": {
+      "message": "Hola, soy el asistente de Peón de Rey. Elige un tema para acotar tu consulta.",
+      "options": [
+        { "id": "cat", "label": "Productos y precios", "nextNodeId": "products" },
+        { "id": "ship", "label": "Envíos", "nextNodeId": "shipping" },
+        { "id": "store", "label": "Horario y tienda", "nextNodeId": "hours" },
+        { "id": "contact", "label": "Contacto", "nextNodeId": "leaf_contact" }
+      ]
+    },
+    "products": {
+      "message": "Trabajamos con tableros, piezas Staunton, relojes de torneo y accesorios.",
+      "options": [
+        { "id": "ranges", "label": "Ver rangos de precio orientativos", "nextNodeId": "leaf_prices" },
+        { "id": "clubs", "label": "Clubes y colegios (volumen)", "nextNodeId": "leaf_clubs" }
+      ]
+    },
+    "shipping": {
+      "message": "¿A dónde necesitas el envío?",
+      "options": [
+        { "id": "pen", "label": "Península", "nextNodeId": "leaf_peninsula" },
+        { "id": "islands", "label": "Islas / internacional", "nextNodeId": "leaf_intl" }
+      ]
+    },
+    "hours": {
+      "message": "Estamos en el centro de Madrid, cerca del parque.",
+      "options": [
+        { "id": "sched", "label": "Ver horario completo", "nextNodeId": "leaf_hours" }
+      ]
+    },
+    "leaf_prices": {
+      "message": "Orientativo: sets Staunton desde 89 €, tableros enrollables desde 24 €, relojes DGT desde 69 €. Si quieres algo más concreto, escríbelo abajo.",
+      "options": [],
+      "isLeaf": true,
+      "allowFreeText": true
+    },
+    "leaf_clubs": {
+      "message": "Para clubes y colegios ofrecemos descuentos por volumen y facturación simplificada. Cuéntanos número de tableros y plazo.",
+      "options": [],
+      "isLeaf": true,
+      "allowFreeText": true
+    },
+    "leaf_peninsula": {
+      "message": "Enviamos a toda la península. Indica población o código postal y te orientamos sobre plazos.",
+      "options": [],
+      "isLeaf": true,
+      "allowFreeText": true
+    },
+    "leaf_intl": {
+      "message": "Para Islas o extranjero valoramos cada pedido. Deja tu país o isla y qué productos te interesan.",
+      "options": [],
+      "isLeaf": true,
+      "allowFreeText": true
+    },
+    "leaf_hours": {
+      "message": "Horario: Lun–Vie 10:00–14:00 y 16:00–20:00 · Sáb 10:00–14:00. Calle del Alfil, 12 · 28013 Madrid.",
+      "options": [],
+      "isLeaf": true,
+      "allowFreeText": true
+    },
+    "leaf_contact": {
+      "message": "Teléfono 900 123 456 · hola@peonderey.example · Calle del Alfil, 12, Madrid.",
+      "options": [],
+      "isLeaf": true,
+      "allowFreeText": true
+    }
+  }
+}

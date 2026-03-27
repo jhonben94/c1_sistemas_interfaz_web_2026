@@ -1,0 +1,110 @@
+<div class="chat-assistant">
+  @if (isOpen()) {
+    <div
+      class="chat-assistant__panel"
+      [id]="panelId"
+      role="dialog"
+      aria-modal="false"
+      aria-label="Asistente Peón de Rey"
+    >
+      <header class="chat-assistant__header">
+        <h2 class="chat-assistant__title">Asistente</h2>
+        <div class="chat-assistant__header-actions">
+          @if (showReiniciar()) {
+            <button type="button" class="chat-assistant__link-btn" (click)="reiniciar()">
+              Empezar de nuevo
+            </button>
+          }
+          <button
+            type="button"
+            class="chat-assistant__icon-btn"
+            (click)="toggle()"
+            aria-label="Cerrar chat"
+          >
+            ×
+          </button>
+        </div>
+      </header>
+      <div
+        class="chat-assistant__messages"
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions"
+        aria-atomic="false"
+      >
+        @if (treeLoading() && messages().length === 0) {
+          <p class="chat-assistant__bubble chat-assistant__bubble--bot chat-assistant__typing">
+            Cargando menú…
+          </p>
+        }
+        @for (m of messages(); track m.id) {
+          <p
+            class="chat-assistant__bubble"
+            [class.chat-assistant__bubble--user]="m.role === 'user'"
+            [class.chat-assistant__bubble--bot]="m.role === 'bot'"
+          >
+            <span class="visually-hidden">{{ m.role === 'user' ? 'Tú: ' : 'Asistente: ' }}</span>
+            {{ m.text }}
+          </p>
+        }
+        @if (isTyping()) {
+          <p class="chat-assistant__bubble chat-assistant__bubble--bot chat-assistant__typing" aria-hidden="true">
+            Escribiendo…
+          </p>
+        }
+      </div>
+
+      @if (showOptions()) {
+        <div class="chat-assistant__options" role="group" aria-label="Opciones del menú">
+          @for (opt of currentNode()!.options; track opt.id) {
+            <button
+              type="button"
+              class="chat-assistant__chip"
+              (click)="chooseOption(opt)"
+              [disabled]="treeLoading()"
+            >
+              {{ opt.label }}
+            </button>
+          }
+        </div>
+      }
+
+      @if (showLeafNoInput()) {
+        <p class="chat-assistant__leaf-hint">Has llegado al final de esta rama. Usa «Empezar de nuevo» para otra consulta.</p>
+      }
+
+      @if (showFreeTextComposer()) {
+        <div class="chat-assistant__composer">
+          <input
+            type="text"
+            class="chat-assistant__input"
+            placeholder="Escribe tu consulta concreta…"
+            [value]="draft()"
+            (input)="onDraftInputEvent($event)"
+            (keydown)="onKeydownEnter($event)"
+            aria-label="Mensaje libre para el asistente"
+            [disabled]="isTyping()"
+          />
+          <button type="button" class="chat-assistant__send" (click)="send()" [disabled]="isTyping()">
+            Enviar
+          </button>
+        </div>
+      }
+    </div>
+  }
+
+  <button
+    type="button"
+    class="chat-assistant__fab"
+    (click)="toggle()"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-controls]="isOpen() ? panelId : null"
+    [attr.aria-label]="isOpen() ? 'Cerrar asistente de chat' : 'Abrir asistente de chat'"
+  >
+    @if (isOpen()) {
+      <span aria-hidden="true">✕</span>
+    } @else {
+      <span aria-hidden="true">💬</span>
+    }
+  </button>
+</div>
