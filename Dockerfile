@@ -1,4 +1,4 @@
-# Etapa de compilación
+# Etapa: compilar Angular
 FROM node:22-alpine AS build
 
 WORKDIR /app
@@ -9,12 +9,27 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Imagen final: solo estáticos con nginx
-FROM nginx:1.27-alpine
+# Imagen final: nginx (puerto 80) + API Node en 3000 (solo localhost)
+FROM node:22-alpine
 
-COPY nginx.docker.conf /etc/nginx/conf.d/default.conf
+RUN apk add --no-cache nginx wget
+
+WORKDIR /app/server
+COPY server/package.json server/package-lock.json ./
+RUN npm ci --omit=dev
+
+COPY server/index.mjs server/tree.json ./
+
+WORKDIR /app
+
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+COPY nginx.docker.conf /etc/nginx/http.d/default.conf
+
 COPY --from=build /app/dist/chessy/browser /usr/share/nginx/html
 
+ENV NODE_ENV=production
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
