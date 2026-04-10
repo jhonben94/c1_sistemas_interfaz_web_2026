@@ -1,0 +1,24 @@
+# Chessy: front Angular (nginx) + API Express en un solo contenedor (ver Dockerfile).
+# Uso: docker compose up --build
+# Abre http://localhost:8080 (API en /api vía el mismo origen).
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${APP_PORT:-8080}:80"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      RELOAD_TREE_TOKEN: ${RELOAD_TREE_TOKEN:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1/api/chat/tree"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s

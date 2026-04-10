@@ -6,6 +6,7 @@
     "api": "npm run start --prefix server",
     "start": "ng serve",
     "build": "ng build",
+    "build:github-pages": "ng build --configuration github-pages",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

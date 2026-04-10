@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 
+import { environment } from '../../environments/environment';
 import { ChatLlmService } from '../chat-llm.service';
 import { ChatTreeService, TreeNodeDto, TreeOptionDto } from '../chat-tree.service';
 
@@ -75,8 +76,9 @@ export class ChatAssistant {
       error: () => {
         this.treeLoading.set(false);
         this.sessionStarted = true;
-        const msg =
-          'No se pudo cargar el menú. Arranca el API con npm run api (puerto 3000) y usa ng serve con proxy.';
+        const msg = environment.githubPages
+          ? 'No se pudo cargar el menú (tree.json). Revisa la URL del sitio y que el build use la base href correcta (/nombre-del-repo/).'
+          : 'No se pudo cargar el menú. Arranca el API con npm run api (puerto 3000) y usa ng serve con proxy.';
         this.currentNode.set(null);
         this.branchPath.set([]);
         this.messages.set([{ id: this.allocId(), role: 'bot', text: msg }]);
@@ -109,7 +111,9 @@ export class ChatAssistant {
           {
             id: this.allocId(),
             role: 'bot',
-            text: 'No se pudo avanzar en el menú. Revisa la conexión con el servidor.'
+            text: environment.githubPages
+              ? 'No se pudo avanzar en el menú. Recarga la página o comprueba que tree.json esté disponible.'
+              : 'No se pudo avanzar en el menú. Revisa la conexión con el servidor.'
           }
         ]);
       }
@@ -166,7 +170,9 @@ export class ChatAssistant {
           {
             id: this.allocId(),
             role: 'bot',
-            text: 'No se obtuvo respuesta del servidor. ¿Está el API en marcha y la ruta del menú es válida?'
+            text: environment.githubPages
+              ? 'No se pudo generar la respuesta. En modo estático sin apiUrl debería mostrarse un texto demo; si configuraste un API remoto, revisa CORS y la URL.'
+              : 'No se obtuvo respuesta del servidor. ¿Está el API en marcha y la ruta del menú es válida?'
           }
         ]);
         this.isTyping.set(false);
